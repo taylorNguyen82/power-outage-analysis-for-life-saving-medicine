@@ -1,1 +1,7 @@
-# power-outage-analysis-for-life-saving-medicine
+## Introduction 
+
+## Data Exploration 
+
+## Baseline Model 
+
+## Final Model 

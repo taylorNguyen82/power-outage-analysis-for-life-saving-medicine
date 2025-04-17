@@ -2,3 +2,6 @@ remote_theme: pages-themes/cayman@v0.2.0
 plugins:
   - jekyll-remote-theme # add this line to the plugins list if you already have one
 
+title : Power Outage Analysis for Life-Saving Medicine
+description: A project to analyze the impact of power outages on life-saving medicine.
+author: Taylor Nguyen and Priya Shah

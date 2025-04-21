@@ -7,14 +7,11 @@ We were initially interested in exploring the question: How are different socioe
 
 | Variable Name         | Description                                                                                                   |
 |-----------------------|---------------------------------------------------------------------------------------------------------------|
-| OUTAGE EVENTS INFORMATION |                                                                                                       |
 | CAUSE.CATEGORY        | Categories of all the events causing the major power outages                                                  |
 | OUTAGE.DURATION       | Duration of outage events (in minutes)                                                                        |
 | CUSTOMERS.AFFECTED    | Number of customers affected by the power outage event                                                        |
-| REGIONAL LAND-USE CHARACTERISTICS |                                                                                               |
 | AREAPCT_URBAN         | Percentage of the land area of the U.S. state represented by the land area of the urban areas (in %)          |
 | AREAPCT_UC            | Percentage of the land area of the U.S. state represented by the land area of the urban clusters (in %)       |
-| REGIONAL CLIMATE INFORMATION |                                                                                                    |
 | CLIMATE.REGION        | U.S. Climate regions as specified by National Centers for Environmental Information (9 consistent U.S. zones) |
 *Note: “NA” in the data file indicates that data was not available.*
 

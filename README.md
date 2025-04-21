@@ -18,8 +18,6 @@ We were initially interested in exploring the question: How are different socioe
 | CLIMATE.REGION        | U.S. Climate regions as specified by National Centers for Environmental Information (9 consistent U.S. zones) |
 *Note: “NA” in the data file indicates that data was not available.*
 
-
-
 ## Data Cleaning and Exploratory Data Analysis
 After extracting it from the downloaded excel, we store and manipulate the data within a Pandas dataframe. From the master dataframe we construct a new dataframe where we select our relevant columns and remove rows with null values. Data conversions are made to ensure numerical data can be used appropriately in subsequent steps.  
 
@@ -29,7 +27,7 @@ After extracting it from the downloaded excel, we store and manipulate the data 
 | Winter 2021 | 2     |
 | Spring 2021 | 6     |
 | Summer 2021 | 4     |
-| Fall 2021   | 55    |
+| Fall 2021   | U.S. Climate regions as specified by National Centers for Environmental Information (9 consistent U.S. zones)   |
 
 We begin by investigating the OUTAGE.DURATION column 
 

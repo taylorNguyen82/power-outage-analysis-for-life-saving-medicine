@@ -72,7 +72,14 @@ We were initially interested in exploring the question: How are different socioe
 
 ## Data Cleaning and Exploratory Data Analysis
 After extracting it from the downloaded excel, we store and manipulate the data within a Pandas dataframe. From the master dataframe we construct a new dataframe where we select our relevant columns and remove rows with null values. Data conversions are made to ensure numerical data can be used appropriately in subsequent steps.  
-[INSERT HEAD OF CLEANED DATA]
+
+| semester    | Count |
+|-------------|-------|
+| Fall 2020   | 3     |
+| Winter 2021 | 2     |
+| Spring 2021 | 6     |
+| Summer 2021 | 4     |
+| Fall 2021   | 55    |
 
 We begin by investigating the OUTAGE.DURATION column 
 
@@ -95,6 +102,8 @@ This isn't a great depiction... the scale of the x-axis isn't very telling. Let'
  <iframe
  src="assets/outage_distr.html"
  frameborder="0"
+ width=800
+ height=800
  ></iframe>
 
 ### Bivariate Analysis 
@@ -102,19 +111,25 @@ Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the other columns. 
 
 
  <iframe
- src="assets/biv_outage_urban.html"
+ src="assets/biv_outage_urb.html"
  frameborder="0"
+ width=800
+ height=800
  ></iframe>
  
  <iframe
  src="assets/outage_outage_uc.html"
  frameborder="0"
+ width=800
+ height=800
  ></iframe>
 
 Note that the above columns explored were `AREAPCT_URBAN` and `AREAPCT_UC`, these are both percentages of land area within a state. We have created our own column `AREAPCT_RURAL` which is assumed to make up the remaining percantage of land area within the state.
 <iframe
  src="assets/outage_outage_rural.html"
  frameborder="0"
+ width=800
+ height=800
  ></iframe>
 
 ## Framing a Prediction Problem

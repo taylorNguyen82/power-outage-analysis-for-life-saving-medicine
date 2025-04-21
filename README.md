@@ -5,14 +5,49 @@ We were initially interested in exploring the question: How are different socioe
 
 ### Table 1. Power Outage Column Descriptions
 
-| Variable Name         | Description                                                                                                   |
-|-----------------------|---------------------------------------------------------------------------------------------------------------|
-| CAUSE.CATEGORY        | Categories of all the events causing the major power outages                                                  |
-| OUTAGE.DURATION       | Duration of outage events (in minutes)                                                                        |
-| CUSTOMERS.AFFECTED    | Number of customers affected by the power outage event                                                        |
-| AREAPCT_URBAN         | Percentage of the land area of the U.S. state represented by the land area of the urban areas (in %)          |
-| AREAPCT_UC            | Percentage of the land area of the U.S. state represented by the land area of the urban clusters (in %)       |
-| CLIMATE.REGION        | U.S. Climate regions as specified by National Centers for Environmental Information (9 consistent U.S. zones) |
+<table>
+  <thead>
+    <tr>
+      <th>Variable Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="2"><strong>OUTAGE EVENTS INFORMATION</strong></td>
+    </tr>
+    <tr>
+      <td>CAUSE.CATEGORY</td>
+      <td>Categories of all the events causing the major power outages</td>
+    </tr>
+    <tr>
+      <td>OUTAGE.DURATION</td>
+      <td>Duration of outage events (in minutes)</td>
+    </tr>
+    <tr>
+      <td>CUSTOMERS.AFFECTED</td>
+      <td>Number of customers affected by the power outage event</td>
+    </tr>
+    <tr>
+      <td colspan="2"><strong>REGIONAL LAND-USE CHARACTERISTICS</strong></td>
+    </tr>
+    <tr>
+      <td>AREAPCT_URBAN</td>
+      <td>Percentage of the land area of the U.S. state represented by the land area of the urban areas (in %)</td>
+    </tr>
+    <tr>
+      <td>AREAPCT_UC</td>
+      <td>Percentage of the land area of the U.S. state represented by the land area of the urban clusters (in %)</td>
+    </tr>
+    <tr>
+      <td colspan="2"><strong>REGIONAL CLIMATE INFORMATION</strong></td>
+    </tr>
+    <tr>
+      <td>CLIMATE.REGION</td>
+      <td>U.S. Climate regions as specified by National Centers for Environmental Information (nine climatically consistent regions in continental U.S.A.)</td>
+    </tr>
+  </tbody>
+</table>
 *Note: “NA” in the data file indicates that data was not available.*
 
 ## Data Cleaning and Exploratory Data Analysis
@@ -32,7 +67,7 @@ We begin by investigating the OUTAGE.DURATION column
  src="assets/outage_dur_distr.html"
  frameborder="0"
  width="800"
- height="600"
+ height="400"
  ></iframe>
 
 This isn't a great depiction... the scale of the x-axis isn't very telling. Let's try to frame this on a more comprehensible scale. We create a new categorical variable, `OUTAGE.DURATION.DESCRIPTION` which places the values of `OUTAGE.DURATION` in the following bins aka our severity categories:
@@ -50,7 +85,7 @@ This isn't a great depiction... the scale of the x-axis isn't very telling. Let'
  src="assets/outage_distr.html"
  frameborder="0"
  width="800"
- height="600"
+ height="400"
  ></iframe>
 
 ### Bivariate Analysis 
@@ -61,26 +96,29 @@ Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the other columns. 
  src="assets/biv_outage_urb.html"
  frameborder="0"
  width="800"
- height="600"
+ height="400"
  ></iframe>
  
  <iframe
  src="assets/outage_outage_uc.html"
  frameborder="0"
  width="800"
- height="600"
+ height="400"
  ></iframe>
 
 Note that the above columns explored were `AREAPCT_URBAN` and `AREAPCT_UC`, these are both percentages of land area within a state. We have created our own column `AREAPCT_RURAL` which is assumed to make up the remaining percantage of land area within the state.
+
 <iframe
  src="assets/outage_outage_rural.html"
  frameborder="0"
  width="800"
- height="600"
+ height="400"
  ></iframe>
 
 ## Framing a Prediction Problem
 We seek to make a multiclass classification prediction problem. We are predicting on the column we have created earlier: `OUTAGE.DURATION.DESCRIPTION`. 
+We chose weighted average as a way to evaluate our model for this multi-class classification problem. Weighted average  calculates the average of the per-class scores, but it weights each class's contribution by the number of samples in that class. Our target variable (OUTAGE.DURATION.DESCRIPTION) is multi-class and imbalanced—some outage duration categories are far more frequent than others. A macro average would treat all classes equally, regardless of size, potentially giving too much influence to rare categories. In contrast, weighted average accounts for class frequency, giving more influence to the performance on more common classes. While it still includes all classes, weighted average provides a middle ground between favoring dominant classes (as micro average might) and overemphasizing rare ones (as macro average might). This ensures our model’s precision isn’t unfairly penalized for not predicting  rare events.
+
 ## Baseline Model 
 
 

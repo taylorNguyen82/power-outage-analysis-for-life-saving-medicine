@@ -4,50 +4,12 @@ We utilize data which pertains to the major outages witnessed by different state
 We were initially interested in exploring the question: How are different socioeconomic areas affected by power outages?  (i.e. duration, severity, frequency, # of customers affected, cause, electricity price). However upon an exploration of the data we found that it would be difficult to isolate outages by socioeconomic area, this is because data is aggregated by state, which is too large of a lens through which to observe socioeconomic differences. From this we pivoted to exploring the ‘severity’ of an outage, in terms of its effect on medically vulnerable individuals. We understand that individuals living off of devices such as ventilators or CPAP machines there is limited backup battery. Many individuals rely on refrigerated medcation such as insulin, losing refrigeration power can cause these medicines to lose viability. Some elderly or heat-sensitive populations can face adverse when HVAC systems are out. In each of these scenarios after several hours of power outage individuals may need to be transported to an area with power or a medical center Therefore we aim to explore the question: **How do states with more urban or rural land area correlate with power outage duration?** 
 
 ### Table 1. Power Outage Column Descriptions
-
-<table>
-  <thead>
-    <tr>
-      <th>Variable Name</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td colspan="2"><strong>OUTAGE EVENTS INFORMATION</strong></td>
-    </tr>
-    <tr>
-      <td>CAUSE.CATEGORY</td>
-      <td>Categories of all the events causing the major power outages</td>
-    </tr>
-    <tr>
-      <td>OUTAGE.DURATION</td>
-      <td>Duration of outage events (in minutes)</td>
-    </tr>
-    <tr>
-      <td>CUSTOMERS.AFFECTED</td>
-      <td>Number of customers affected by the power outage event</td>
-    </tr>
-    <tr>
-      <td colspan="2"><strong>REGIONAL LAND-USE CHARACTERISTICS</strong></td>
-    </tr>
-    <tr>
-      <td>AREAPCT_URBAN</td>
-      <td>Percentage of the land area of the U.S. state represented by the land area of the urban areas (in %)</td>
-    </tr>
-    <tr>
-      <td>AREAPCT_UC</td>
-      <td>Percentage of the land area of the U.S. state represented by the land area of the urban clusters (in %)</td>
-    </tr>
-    <tr>
-      <td colspan="2"><strong>REGIONAL CLIMATE INFORMATION</strong></td>
-    </tr>
-    <tr>
-      <td>CLIMATE.REGION</td>
-      <td>U.S. Climate regions as specified by National Centers for Environmental Information (nine climatically consistent regions in continental U.S.A.)</td>
-    </tr>
-  </tbody>
-</table>
+<iframe
+ src="assets/table1.html"
+ frameborder="0"
+ width="800"
+ height="600"
+ ></iframe>
 *Note: “NA” in the data file indicates that data was not available.*
 
 ## Data Cleaning and Exploratory Data Analysis
@@ -59,9 +21,9 @@ After extracting it from the downloaded excel, we store and manipulate the data 
 | Winter 2021 | 2     |
 | Spring 2021 | 6     |
 | Summer 2021 | 4     |
-| Fall 2021   | U.S. Climate regions as specified by National Centers for Environmental Information (9 consistent U.S. zones)   |
+| Fall 2021   |  |
 
-We begin by investigating the OUTAGE.DURATION column 
+We begin by investigating the `OUTAGE.DURATION` column 
 
  <iframe
  src="assets/outage_dur_distr.html"
@@ -121,11 +83,12 @@ We chose weighted average as a way to evaluate our model for this multi-class cl
 
 ## Baseline Model 
 
-We decided to use a decision tree classifier for our baseline model. We used the features ‘AREAPCT_URBAN', 'AREAPCT_RURAL' (quantitative variables representing the percentage of area that is urban and rural)   in order to find our target OUTAGE.DURATION.DESCRIPTION, which describes the severity of power outages (Critical, Minimal, Moderate, Severe). 
+We decided to use a decision tree classifier for our baseline model. We used the features `AREAPCT_URBAN`, `AREAPCT_RURAL` (quantitative variables representing the percentage of area that is urban and rural)   in order to find our target OUTAGE.DURATION.DESCRIPTION, which describes the severity of power outages (Critical, Minimal, Moderate, Severe). 
 here were:
 
 
 In short, we had: 
+
 2 quantitative features: AREAPCT_URBAN, AREAPCT_RURAL
 
 0 ordinal features

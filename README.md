@@ -122,7 +122,7 @@ Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the `AREAPCT_...` c
  height="400"
  ></iframe>
 
-As we assumed just previously there are quite a few 0s in the `Moderate` and `Critical` rows. The `Severe` row definitely appears to have the most concentration happening within a few states, namely: Michigan, Texas, California, and Pennsylvania. 
+Our extrapolations from above are correct! There are quite a few 0s in the `Moderate` and `Critical` rows. The `Severe` row definitely appears to have the most concentration happening within a few states, namely: Michigan, Texas, California, and Pennsylvania. 
 
 #### Imputation 
 We did not perform any missing value imputation. A majority of our dropped rows occurred due to null values in the `CUSTOMERS.AFFECTED` and `CAUSE.CATEGORY` columns. We felt that it would not be appropriate to imputate these columns as they are truly unique to each outage.  
@@ -139,15 +139,15 @@ here were:
 
 In short, we had: 
 
-2 quantitative features: AREAPCT_URBAN, AREAPCT_RURAL
+- 2 quantitative features: AREAPCT_URBAN, AREAPCT_RURAL
 
-0 ordinal features
+- 0 ordinal features
 
-0 nominal (categorical) features
+- 0 nominal (categorical) features
 
 Since both features are numeric and continuous, we  applied standard scaling using StandardScaler to normalize their values before feeding them into the classifier. No encoding was needed since there were not any categorical variables. 
 We split the data into training and test sets using an 80/20 ratio, and trained the decision tree with default hyperparameters (except setting random_state=42 for reproducibility). The pipeline had a preprocessing step as well. 
-Below is a summary of the model’s performance: 
+Below is the model’s performance in terms of our chosen metric: 
 Weighted Average: 61%
 
 
@@ -165,27 +165,27 @@ StandardScaler: We applied standardization to our numerical features using Stand
 
 
 Categorical Features: 
-CAUSE.CATEGORY: The cause of an outage (e.g., severe weather, fuel supply emergency, equipment failure )) is relevant to its expected duration. This was included using one-hot encoding to retain categorical distinctions without creating ordinal bias.
-CLIMATE.REGION: Different climate zones (e.g., Southeast vs. Northwest) are subject to distinct weather events—like hurricanes, snowstorms, or droughts—that can significantly impact both the frequency and severity of outage. The CLIMATE.REGION column was processed using OneHotEncoder within the pipeline, enabling the model to leverage it without introducing ordinal bias while maintaining compatibility with cross-validation.
+- CAUSE.CATEGORY: The cause of an outage (e.g., severe weather, fuel supply emergency, equipment failure )) is relevant to its expected duration. This was included using one-hot encoding to retain categorical distinctions without creating ordinal bias.
+- CLIMATE.REGION: Different climate zones (e.g., Southeast vs. Northwest) are subject to distinct weather events—like hurricanes, snowstorms, or droughts—that can significantly impact both the frequency and severity of outage. The CLIMATE.REGION column was processed using OneHotEncoder within the pipeline, enabling the model to leverage it without introducing ordinal bias while maintaining compatibility with cross-validation.
 
 
 We selected a Random Forest Classifier for its robustness to overfitting, ability to handle both numerical and categorical data, and strong performance on imbalanced classification problems when paired with class weighting. To fine-tune our model, we used GridSearchCV to explore different combinations of hyperparameters for the RandomForestClassifier. Specifically, we varied:
 
-n_estimators (number of trees): 50, 100, 200
+- n_estimators (number of trees): 50, 100, 200
 
-max_depth (maximum depth of the trees): 5, 10, 20, and None (unlimited)
+- max_depth (maximum depth of the trees): 5, 10, 20, and None (unlimited)
 
-min_samples_split (minimum samples to split a node): 2, 5, 10
+- min_samples_split (minimum samples to split a node): 2, 5, 10
 
 The grid search used 5-fold cross-validation to evaluate the performance of each combination.
 
 The best-performing combination was:
 
-n_estimators = 100
+- n_estimators = 100
 
-max_depth = 10
+- max_depth = 10
 
-min_samples_split = 2
+- min_samples_split = 2
 
 This configuration offered a good balance between model complexity and generalization. A moderate depth (max_depth = 10) helped prevent overfitting, while using 100 trees ensured stability in predictions without making the model too slow or heavy.
 

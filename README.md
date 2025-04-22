@@ -1,3 +1,4 @@
+<title>Power Outage Analysis for Life-Saving Medicine</title>
 ## Introduction 
 We utilize data which pertains to the major outages witnessed by different states in the continental U.S. during January 2000–July 2016. There are a total of 1534 total outages reported in the dataset and 57 columns of collected data. Further details regarding the raw data and its collection process can be found in the original published [data article](https://doi.org/10.1016/j.dib.2018.06.067).  
 
@@ -137,7 +138,6 @@ We chose `F1 Weighted Average` as a way to evaluate our model for this multi-cla
 We decided to use a decision tree classifier for our baseline model. We used the features `AREAPCT_URBAN`, `AREAPCT_RURAL` (quantitative variables representing the percentage of area that is urban and rural)   in order to find our target `OUTAGE.DURATION.DESCRIPTION`, which describes the severity of power outages (`Critical`, `Minimal`, `Moderate`, `Severe`). 
 here were:
 
-
 In short, we had: 
 
 - 2 quantitative features: `AREAPCT_URBAN`, `AREAPCT_RURAL`
@@ -149,7 +149,6 @@ In short, we had:
 Since both features are numeric and continuous, we  applied standard scaling using StandardScaler to normalize their values before feeding them into the classifier. No encoding was needed since there were not any categorical variables. 
 We split the data into training and test sets using an 80/20 ratio, and trained the decision tree with default hyperparameters (except setting random_state=42 for reproducibility). The pipeline had a preprocessing step as well. 
 The model’s performance in terms of our chosen metric: `F1 Weighted Average=61%`.
-
 
 Overall, while the weighted average  may seem moderate, the model is not yet good because it suffers from significant class imbalance and poor performance on minority classes. This indicates the model is biased toward the dominant class (`Severe`), and may not generalize well in more balanced or real-world situations.
 
@@ -182,12 +181,12 @@ To enhance the predictive performance of the model, we adjusted and added severa
  height="400"
  ></iframe>
 
-#### Numerical Feature Transformations: 
+### Numerical Feature Transformations: 
 - `FunctionTransfomer`: log_customers: We transformed the numeric variables using a log transformation (log1p). This stabilizes variance and reduces the skewness from extreme outliers (e.g., major outages affecting thousands of customers), enabling the model to better differentiate between typical and large-scale events without being overwhelmed. 
 
 - `StandardScaler`: We applied standardization to our numerical features using StandardScaler within our pipeline. This step ensures that all numeric input variables are transformed to have a mean of 0 and a standard deviation of 1, enabling the model to treat all features on a comparable scale.
 
-#### Final Model Structure
+### Final Model Structure
 We selected a Random Forest Classifier for its robustness to overfitting, ability to handle both numerical and categorical data, and strong performance on imbalanced classification problems when paired with class weighting. To fine-tune our model, we used GridSearchCV to explore different combinations of hyperparameters for the RandomForestClassifier. The grid search used 5-fold cross-validation to evaluate the performance of each combination. The varied parameters and resulting best parameter are found in Table 2 below. 
 
 ### Table 2. Hyperparameter Options for GridSearch and Resulting Best Parameter
@@ -229,7 +228,7 @@ Compared to the Baseline Model (a simple Decision Tree), the tuned Random Forest
 ### Conclusion
 Our exploration of this dataset shows incredible risk for medically-vulnerable communities during a power-outage. We hope that infrastructure changes and more proficient communication (informed by more accurate predictive modes) to medically-vulnerable individuals can help to increase action in the event of a power outage, ensuring that individual's are not forced to struggle through extended outages.
 
-### Acknowledgements
+## Acknowledgements
 This project report is part of EECS 398-003 Practical Data Science portfolio homework by Professor Suraj Rampure at the University of Michigan College of Engineering.
 
 1. Kosari S, Walker EJ, Anderson C, Peterson GM, Naunton M, Castillo Martinez E, Garg S, Thomas J. Power outages and refrigerated medicines: The need for better guidelines, awareness and planning. J Clin Pharm Ther. 2018 Oct;43(5):737-739. doi: 10.1111/jcpt.12716. Epub 2018 Jun 13. PMID: 29900564.

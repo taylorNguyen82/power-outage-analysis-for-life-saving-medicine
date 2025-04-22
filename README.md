@@ -3,6 +3,8 @@ We utilize data which pertains to the major outages witnessed by different state
 
 We were initially interested in exploring the question: How are different socioeconomic areas affected by power outages?  (i.e. duration, severity, frequency, # of customers affected, cause, electricity price). However upon an exploration of the data we found that it would be difficult to isolate outages by socioeconomic area, this is because data is aggregated by state, which is too large of a lens through which to observe socioeconomic differences. From this we pivoted to exploring the ‘severity’ of an outage, in terms of its effect on medically vulnerable individuals. We understand that for individuals living off of devices such as ventilators or CPAP machines there is limited backup battery. Many individuals rely on refrigerated medcation such as insulin and losing refrigeration power can cause these medicines to lose viability. Some elderly or heat-sensitive populations are at increased risk when HVAC systems are out. After several hours of power outage medically vulnerable individuals may need to be transported to an area with power or to a medical center to alieviate these issues. How realistic is this possibility of relocation? Are those at risk of severe power outages also located in rural areas where the nearest medical facility may be a great distance away? Therefore we aim to explore the question: **How do states with more urban or rural land area correlate with severity of power outage duration?** 
 
+Table 1 describes the relevant columns we selected for our study. 
+
 ### Table 1. Power Outage Column Descriptions
 
 <table>
@@ -51,7 +53,7 @@ We were initially interested in exploring the question: How are different socioe
 *Note: “NA” in the data file indicates that data was not available.*
 
 ## Data Cleaning and Exploratory Data Analysis
-After extracting it from the downloaded excel, we store and manipulate the data within a Pandas dataframe. From the master DataFrame we construct a new dataframe where we select our relevant columns and remove rows with null values. Data conversions are made to ensure numerical data can be used appropriately in subsequent steps. After cleaning our resulting DataFrame has 1042 outages for us to work with. We have created our own column `AREAPCT_RURAL` which is assumed to make up the remaining percantage of land area within the state.
+After extracting it from the downloaded excel, we store and manipulate the data within a Pandas dataframe. From the master DataFrame we construct a new dataframe where we select our relevant columns and remove rows with null values. Data conversions are made to ensure numerical data can be used appropriately in subsequent steps. After cleaning our resulting DataFrame has 1051 outages for us to work with. We have created our own column `AREAPCT_RURAL` which is assumed to make up the remaining percantage of land area within the state.
 
 | POSTAL.CODE   |   OUTAGE.DURATION |   AREAPCT_URBAN |   AREAPCT_UC | CAUSE.CATEGORY   |   CUSTOMERS.AFFECTED | CLIMATE.REGION     |   AREAPCT_RURAL |
 |:--------------|------------------:|----------------:|-------------:|:-----------------|---------------------:|:-------------------|----------------:|
@@ -71,7 +73,7 @@ We begin by investigating the distribution of the `OUTAGE.DURATION` column.
  height="400"
  ></iframe>
 
-This depiction isn't very helpful. The data is clearly right-skewed but the scale of the x-axis bins are so large its difficult to derive real meaning for our exploration of medical vulnerability. Let's try to frame this on a more relevant scale. We have created a new categorical variable, `OUTAGE.DURATION.DESCRIPTION` which places the values of `OUTAGE.DURATION` in the following bins, these are our severity categories:
+This distribution depiction isn't very helpful. The data is clearly right-skewed but the scale of the x-axis bins are so large its difficult to derive real meaning for our exploration of medical vulnerability. Let's try to frame this on a more relevant scale. We have created a new categorical variable, `OUTAGE.DURATION.DESCRIPTION` which places the values of `OUTAGE.DURATION` in the following bins, these are our severity categories:
 
 **Short-term (0–2 hours):** Minimal risk for most
 
@@ -103,16 +105,27 @@ Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the `AREAPCT_...` c
  ></iframe>
 
 <iframe
- src="assets/outage_outage_rural.html"
+ src="assets/biv_outage_rural.html"
  frameborder="0"
  width="800"
  height="400"
  ></iframe>
 
-### Aggregates
+ We can extrapolate from these two graphs that almost all states have a greater proportion of rural area compared to urban or urban clusters. Note: The one 'state' with 100% urban land area (and correspondingly 0% rural is D.C.)! We can see that the more concentrated categories, `Moderate` and `Critical`, are likely occurring in a smaller sample of states. `Minimal` outages however probably ocurr across all 50 states, regardless of the mix of urban vs rural land area in the state. Interestingly, `Severe` outages appear to be more concentrated than `Minimal`, despite the fact that `Severe` outages make up an overwhelming majority of our dataset. Let's look at a breakdown of these categories by state to learn more: 
+
+### Interesting Aggregates
+
+ <iframe
+ src="assets/biv_postal.html"
+ frameborder="0"
+ width="800"
+ height="400"
+ ></iframe>
+
+As we assumed just previously there are quite a few 0s in the `Moderate` and `Critical` rows. The `Severe` row definitely appears to have the most concentration happening within a few states, namely: Michigan, Texas, California, and Pennsylvania. 
 
 #### Imputation 
-We did not perform any missing value imputation. 
+We did not perform any missing value imputation. A majority of our dropped rows occurred due to null values in the `CUSTOMERS.AFFECTED` and `CAUSE.CATEGORY` columns. We felt that it would not be appropriate to imputate these columns as they are truly unique to each outage.  
 
 ## Framing a Prediction Problem
 We seek to make a multiclass classification prediction problem. We are predicting on the column we have created earlier: `OUTAGE.DURATION.DESCRIPTION`. 

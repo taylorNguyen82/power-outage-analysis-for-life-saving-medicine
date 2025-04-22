@@ -2,7 +2,7 @@
 ## Introduction 
 We utilize data which pertains to the major outages witnessed by different states in the continental U.S. during January 2000–July 2016. There are a total of 1534 total outages reported in the dataset and 57 columns of collected data. Further details regarding the raw data and its collection process can be found in the original published [data article](https://doi.org/10.1016/j.dib.2018.06.067).  
 
-We were initially interested in exploring the question: How are different socioeconomic areas affected by power outages?  (i.e. duration, severity, frequency, # of customers affected, cause, electricity price). However upon an exploration of the data we found that it would be difficult to isolate outages by socioeconomic area, this is because data is aggregated by state, which is too large of a lens through which to observe socioeconomic differences. From this we pivoted to exploring the ‘severity’ of an outage, in terms of its effect on medically vulnerable individuals. We understand that for individuals living off of devices such as ventilators or CPAP machines there is limited backup battery. Many individuals rely on refrigerated medcation such as insulin and losing refrigeration power can cause these medicines to lose viability. Some elderly or heat-sensitive populations are at increased risk when HVAC systems are out. After several hours of power outage medically vulnerable individuals may need to be transported to an area with power or to a medical center to alieviate these issues. How realistic is this possibility of relocation? Are those at risk of severe power outages also located in rural areas where the nearest medical facility may be a great distance away? Therefore we aim to explore the question: **How do states with more urban or rural land area correlate with severity of power outage duration?** 
+We were initially interested in exploring the question: How are different socioeconomic areas affected by power outages?  (i.e. duration, severity, frequency, # of customers affected, cause, electricity price). However upon an exploration of the data we found that it would be difficult to isolate outages by socioeconomic area, this is because data is aggregated by state, which is too large of a lens through which to observe socioeconomic differences. From this we pivoted to exploring the ‘severity’ of an outage, in terms of its effect on medically vulnerable individuals. We understand that for individuals living off of devices such as ventilators or CPAP machines there is limited backup battery. Many individuals rely on refrigerated medication such as insulin and losing refrigeration power can cause these medicines to lose viability. Some elderly or heat-sensitive populations are at increased risk when HVAC systems are out. After several hours of power outage, medically vulnerable individuals may need to be transported to an area with power or to a medical center to alleviate these issues. How realistic is this possibility of relocation? Are those at risk of severe power outages also located in rural areas where the nearest medical facility may be a great distance away? Therefore we aim to explore the question: **How do states with more urban or rural land area correlate with severity of power outage duration?** 
 
 Table 1 describes the relevant columns we selected for our study. 
 
@@ -54,7 +54,7 @@ Table 1 describes the relevant columns we selected for our study.
 *Note: “NA” in the data file indicates that data was not available.*
 
 ## Data Cleaning and Exploratory Data Analysis
-After extracting it from the downloaded excel, we store and manipulate the data within a Pandas dataframe. From the master DataFrame we construct a new dataframe where we select our relevant columns and remove rows with null values. Data conversions are made to ensure numerical data can be used appropriately in subsequent steps. After cleaning our resulting DataFrame has 1051 outages for us to work with. We have created our own column `AREAPCT_RURAL` which is assumed to make up the remaining percantage of land area within the state.
+After extracting it from the downloaded excel, we store and manipulate the data within a Pandas dataframe. From the master DataFrame we construct a new dataframe where we select our relevant columns and remove rows with null values. Data conversions are made to ensure numerical data can be used appropriately in subsequent steps. After cleaning our resulting DataFrame has 1051 outages for us to work with. We have created our own column `AREAPCT_RURAL` which is assumed to make up the remaining percentage of land area within the state. Here's a few rows from our cleaned DataFrame: 
 
 | POSTAL.CODE   |   OUTAGE.DURATION |   AREAPCT_URBAN |   AREAPCT_UC | CAUSE.CATEGORY   |   CUSTOMERS.AFFECTED | CLIMATE.REGION     |   AREAPCT_RURAL |
 |:--------------|------------------:|----------------:|-------------:|:-----------------|---------------------:|:-------------------|----------------:|
@@ -74,7 +74,7 @@ We begin by investigating the distribution of the `OUTAGE.DURATION` column.
  height="400"
  ></iframe>
 
-This distribution depiction isn't very helpful. The data is clearly right-skewed but the scale of the x-axis bins are so large its difficult to derive real meaning for our exploration of medical vulnerability. Let's try to frame this on a more relevant scale. We have created a new categorical variable, `OUTAGE.DURATION.DESCRIPTION` which places the values of `OUTAGE.DURATION` in the following bins, these are our severity categories:
+This distribution depiction isn't very helpful. The data is clearly right-skewed but the scale of the x-axis bins are so large it is difficult to derive real meaning for our exploration of medical vulnerability. Let's try to frame this on a more relevant scale. We have created a new categorical variable, `OUTAGE.DURATION.DESCRIPTION` which places the values of `OUTAGE.DURATION` in the following bins, these are our severity categories:
 
 **Short-term (0–2 hours):** Minimal risk for most
 
@@ -92,7 +92,7 @@ This distribution depiction isn't very helpful. The data is clearly right-skewed
  height="400"
  ></iframe>
 
-Over half of our data is categorized as having a medically severe duration, this demonstrates a dangerous trend for those with higher medical risk. To learn more about these vulnerabilities we need to understand the geographic landscape in which these severe outages ocurr. 
+Over half of our data is categorized as having a medically severe duration, which demonstrates a dangerous trend for those with higher medical risk. To learn more about these vulnerabilities, we need to understand the geographic landscape in which these severe outages occur. 
 
 ### Bivariate Analysis 
 Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the `AREAPCT_...` columns. Recall from our descriptions in Table 1 above that `AREAPCT_...` is the percentage of land area within each state that is classified as being `Urban`, `Urban Cluster`, or `Rural`.  
@@ -112,7 +112,7 @@ Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the `AREAPCT_...` c
  height="400"
  ></iframe>
 
- We can extrapolate from these two graphs that almost all states have a greater proportion of rural area compared to urban or urban clusters. Note: The one 'state' with 100% urban land area (and correspondingly 0% rural is D.C.)! We can see that the more concentrated categories, `Moderate` and `Critical`, are likely occurring in a smaller sample of states. `Minimal` outages however probably ocurr across all 50 states, regardless of the mix of urban vs rural land area in the state. Interestingly, `Severe` outages appear to be more concentrated than `Minimal`, despite the fact that `Severe` outages make up an overwhelming majority of our dataset. Let's look at a breakdown of these categories by state to learn more: 
+ We can extrapolate from these two graphs that almost all states have a greater proportion of rural areas compared to urban or urban clusters. Note: The one 'state' with 100% urban land area (and correspondingly 0% rural is D.C.)! We can see that the more concentrated categories, `Moderate` and `Critical`, are likely occurring in a smaller sample of states. `Minimal` outages however probably occur across all 50 states, regardless of the mix of urban vs rural land area in the state. Interestingly, `Severe` outages appear to be more concentrated than `Minimal`, despite the fact that `Severe` outages make up an overwhelming majority of our dataset. Let's look at a breakdown of these categories by state to learn more: 
 
 ### Interesting Aggregates
 
@@ -172,7 +172,7 @@ To enhance the predictive performance of the model, we adjusted and added severa
  height="400"
  ></iframe>
 
- - `CLIMATE.REGION`: Following up with our exploration of `CAUSE.CATEGORY` we decided to investigate `CLIMATE.REGION`. Different climate zones (e.g., Southeast vs. Northwest) are subject to distinct weather events—like hurricanes, snowstorms, or droughts—that can significantly impact both the frequency and severity of outage. Based on the variation in the figure below we hypothesized that `CLIMATE.REGION` would make a more generalized feature than `POSTAL.CODE`. The `CLIMATE.REGION` column was processed using OneHotEncoder within the pipeline, enabling the model to leverage it without introducing ordinal bias, while maintaining compatibility with cross-validation.
+ - `CLIMATE.REGION`: Following up with our exploration of `CAUSE.CATEGORY` we decided to investigate `CLIMATE.REGION`. Different climate zones (e.g., Southeast vs. Northwest) are subject to distinct weather events—like hurricanes, snowstorms, or droughts—that can significantly impact both the frequency and severity of outages. Based on the variation in the figure below we hypothesized that `CLIMATE.REGION` would make a more generalized feature than `POSTAL.CODE`. The `CLIMATE.REGION` column was processed using OneHotEncoder within the pipeline, enabling the model to leverage it without introducing ordinal bias, while maintaining compatibility with cross-validation.
 
  <iframe
  src="assets/biv_climate.html"
@@ -223,7 +223,14 @@ We selected a Random Forest Classifier for its robustness to overfitting, abilit
 
 This configuration offered a good balance between model complexity and generalization. A moderate depth (`max_depth = 10`) helped prevent overfitting, while using 100 trees ensured stability in predictions without making the model too slow or heavy.
 
-Compared to the Baseline Model (a simple Decision Tree), the tuned Random Forest showed notable improvements in the `F1 Weighted Average`, increasing from 61% to 72%. These results highlight better generalization across all duration types, not just the dominant `Severe` class. 
+Compared to the Baseline Model (a simple Decision Tree), the tuned Random Forest showed notable improvements in the `F1 Weighted Average`, increasing from 61% to 72%. These results highlight better generalization across all duration types, not just the dominant `Severe` class. Overall results can be viewed below, note that the `Critical` group which were least represented in the overall data received zero classifications. 
+
+<iframe
+ src="assets/final_results.html"
+ frameborder="0"
+ width="800"
+ height="400"
+ ></iframe>
 
 ### Conclusion
 Our exploration of this dataset shows incredible risk for medically-vulnerable communities during a power-outage. We hope that infrastructure changes and more proficient communication (informed by more accurate predictive modes) to medically-vulnerable individuals can help to increase action in the event of a power outage, ensuring that individual's are not forced to struggle through extended outages.

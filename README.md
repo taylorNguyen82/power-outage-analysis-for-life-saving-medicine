@@ -107,7 +107,7 @@ Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the `AREAPCT_...` c
 <iframe
  src="assets/biv_outage_rural.html"
  frameborder="0"
- width="1200"
+ width="800"
  height="400"
  ></iframe>
 
@@ -118,7 +118,7 @@ Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the `AREAPCT_...` c
  <iframe
  src="assets/biv_postal.html"
  frameborder="0"
- width="2000"
+ width="800"
  height="400"
  ></iframe>
 
@@ -130,7 +130,7 @@ We did not perform any missing value imputation. A majority of our dropped rows 
 ## Framing a Prediction Problem
 We seek to make a multiclass classification prediction problem. We are predicting on the column we have created earlier: `OUTAGE.DURATION.DESCRIPTION`. We can safely assume that all of the possible features we have pulled (in Table 1) are available at the beginning of an outage and therefore can be used to predict duration. 
 
-We chose weighted average as a way to evaluate our model for this multi-class classification problem. Weighted average  calculates the average of the per-class scores, but it weights each class's contribution by the number of samples in that class. Our target variable (OUTAGE.DURATION.DESCRIPTION) is multi-class and imbalanced—some outage duration categories are far more frequent than others. A macro average would treat all classes equally, regardless of size, potentially giving too much influence to rare categories. In contrast, weighted average accounts for class frequency, giving more influence to the performance on more common classes. While it still includes all classes, weighted average provides a middle ground between favoring dominant classes (as micro average might) and overemphasizing rare ones (as macro average might). This ensures our model’s precision isn’t unfairly penalized for not predicting  rare events.
+We chose `F1 Weighted Average` as a way to evaluate our model for this multi-class classification problem. Weighted average  calculates the average of the per-class scores, but it weights each class's contribution by the number of samples in that class. Our target variable (OUTAGE.DURATION.DESCRIPTION) is multi-class and imbalanced—some outage duration categories are far more frequent than others. A macro average would treat all classes equally, regardless of size, potentially giving too much influence to rare categories. In contrast, weighted average accounts for class frequency, giving more influence to the performance on more common classes. While it still includes all classes, weighted average provides a middle ground between favoring dominant classes (as micro average might) and overemphasizing rare ones (as macro average might). This ensures our model’s precision isn’t unfairly penalized for not predicting  rare events.
 
 ## Baseline Model 
 
@@ -148,37 +148,82 @@ In short, we had:
 
 Since both features are numeric and continuous, we  applied standard scaling using StandardScaler to normalize their values before feeding them into the classifier. No encoding was needed since there were not any categorical variables. 
 We split the data into training and test sets using an 80/20 ratio, and trained the decision tree with default hyperparameters (except setting random_state=42 for reproducibility). The pipeline had a preprocessing step as well. 
-The model’s performance in terms of our chosen metric: 
-`F1 Weighted Average`=61%
+The model’s performance in terms of our chosen metric: `F1 Weighted Average=61%`.
 
 
 Overall, while the weighted average  may seem moderate, the model is not yet good because it suffers from significant class imbalance and poor performance on minority classes. This indicates the model is biased toward the dominant class (`Severe`), and may not generalize well in more balanced or real-world situations.
 
 ## Final Model 
 
-To enhance the predictive performance of the model, we adjusted several features. 
+To enhance the predictive performance of the model, we adjusted and added several features. 
+- `CUSTOMERS.AFFECTED`: We assumed that more customers affected would lead to a longer outage. We performed an exploratory analysis to test our hypothesis with the figure below. We found that this plot greatly resembles our original distribution of `OUTAGE.DURATION.DESCRIPTION` counts. Therefore we anticipate `CUSTOMERS.AFFECTED` to be a strong predictor for our model. 
+
+ <iframe
+ src="assets/biv_customers_aff.html"
+ frameborder="0"
+ width="800"
+ height="400"
+ ></iframe>
+
+- `CAUSE.CATEGORY`: We observed earlier an interesting concentration of `Severe` outages within a few states, namely: Michigan, Texas, California, and Pennsylvania. These states have significantly different climates and we therefore chose to explore the overall distribution of `OUTAGE.DURATION.DESCRIPTION` versus `CAUSE.CATEGORY` to see if causes other than climate might be affecting these states. After observing the figure below we see that `CAUSE.CATEGORY` is overwhelmingly skewed toward `severe weather` events. Based on this we hypothesize that `CAUSE.CATEGORY` might be used in tandem with `CLIMATE.REGION` (described below).`CAUSE.CATEGORY` was included using one-hot encoding to retain categorical distinctions without creating ordinal bias.
+ <iframe
+ src="assets/biv_cause.html"
+ frameborder="0"
+ width="800"
+ height="400"
+ ></iframe>
+
+ - `CLIMATE.REGION`: Following up with our exploration of `CAUSE.CATEGORY` we decided to investigate `CLIMATE.REGION`. Different climate zones (e.g., Southeast vs. Northwest) are subject to distinct weather events—like hurricanes, snowstorms, or droughts—that can significantly impact both the frequency and severity of outage. Based on the variation in the figure below we hypothesized that `CLIMATE.REGION` would make a more generalized feature than `POSTAL.CODE`. The `CLIMATE.REGION` column was processed using OneHotEncoder within the pipeline, enabling the model to leverage it without introducing ordinal bias, while maintaining compatibility with cross-validation.
+
+ <iframe
+ src="assets/biv_climate.html"
+ frameborder="0"
+ width="800"
+ height="400"
+ ></iframe>
 
 #### Numerical Feature Transformations: 
-- FunctionTransfomer: log_customers: We  transformed the CUSTOMERS.AFFECTED variable using a log transformation (log1p). This stabilizes variance and reduces the skewness from extreme outliers (e.g., major outages affecting thousands of customers), enabling the model to better differentiate between typical and large-scale events without being overwhelmed. 
+- `FunctionTransfomer`: log_customers: We transformed the numeric variables using a log transformation (log1p). This stabilizes variance and reduces the skewness from extreme outliers (e.g., major outages affecting thousands of customers), enabling the model to better differentiate between typical and large-scale events without being overwhelmed. 
 
-- StandardScaler: We applied standardization to our numerical features using StandardScaler within our pipeline. This step ensures that all numeric input variables are transformed to have a mean of 0 and a standard deviation of 1, enabling the model to treat all features on a comparable scale.
+- `StandardScaler`: We applied standardization to our numerical features using StandardScaler within our pipeline. This step ensures that all numeric input variables are transformed to have a mean of 0 and a standard deviation of 1, enabling the model to treat all features on a comparable scale.
 
-#### Categorical Features: 
-- CAUSE.CATEGORY: The cause of an outage (e.g., severe weather, fuel supply emergency, equipment failure )) is relevant to its expected duration. This was included using one-hot encoding to retain categorical distinctions without creating ordinal bias.
-- CLIMATE.REGION: Different climate zones (e.g., Southeast vs. Northwest) are subject to distinct weather events—like hurricanes, snowstorms, or droughts—that can significantly impact both the frequency and severity of outage. The CLIMATE.REGION column was processed using OneHotEncoder within the pipeline, enabling the model to leverage it without introducing ordinal bias while maintaining compatibility with cross-validation.
-
-
+#### Final Model Structure
 We selected a Random Forest Classifier for its robustness to overfitting, ability to handle both numerical and categorical data, and strong performance on imbalanced classification problems when paired with class weighting. To fine-tune our model, we used GridSearchCV to explore different combinations of hyperparameters for the RandomForestClassifier. The grid search used 5-fold cross-validation to evaluate the performance of each combination. The varied parameters and resulting best parameter are found in Table 2 below. 
 
 ### Table 2. Hyperparameter Options for GridSearch and Resulting Best Parameter
-| Parameter           | Description                                | Values                   |  Best | 
-|---------------------|--------------------------------------------|--------------------------|-------|
-| `n_estimators`      | Number of trees in the forest              | 50, 100, 200             | 100    |
-| `max_depth`         | Maximum depth of the trees                 | 5, 10, 20, None (unlimited) | 10  |
-| `min_samples_split` | Minimum samples required to split a node   | 2, 5, 10                 |  2     |
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Values</th>
+      <th>Best</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>n_estimators</code></td>
+      <td>Number of trees in the forest</td>
+      <td>50, 100, 200</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td><code>max_depth</code></td>
+      <td>Maximum depth of the trees</td>
+      <td>5, 10, 20, None (unlimited)</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td><code>min_samples_split</code></td>
+      <td>Minimum samples required to split a node</td>
+      <td>2, 5, 10</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
 
+This configuration offered a good balance between model complexity and generalization. A moderate depth (`max_depth = 10`) helped prevent overfitting, while using 100 trees ensured stability in predictions without making the model too slow or heavy.
 
-This configuration offered a good balance between model complexity and generalization. A moderate depth (max_depth = 10) helped prevent overfitting, while using 100 trees ensured stability in predictions without making the model too slow or heavy.
+Compared to the Baseline Model (a simple Decision Tree), the tuned Random Forest showed notable improvements in the `F1 Weighted Average`, increasing from 61% to 72%. These results highlight better generalization across all duration types, not just the dominant `Severe` class. 
 
-Compared to the Baseline Model (a simple Decision Tree), the tuned Random Forest showed notable improvements in the weighted average. It increased from 61% to 72%, highlighting better generalization across all duration types, not just the dominant “Severe” class.
-
+### Conclusion

@@ -227,3 +227,9 @@ This configuration offered a good balance between model complexity and generaliz
 Compared to the Baseline Model (a simple Decision Tree), the tuned Random Forest showed notable improvements in the `F1 Weighted Average`, increasing from 61% to 72%. These results highlight better generalization across all duration types, not just the dominant `Severe` class. 
 
 ### Conclusion
+Our exploration of this dataset shows incredible risk for medically-vulnerable communities during a power-outage. We hope that infrastructure changes and more proficient communication (informed by more accurate predictive modes) to medically-vulnerable individuals can help to increase action in the event of a power outage, ensuring that individual's are not forced to struggle through extended outages.
+
+### Acknowledgements
+This project report is part of EECS 398-003 Practical Data Science portfolio homework by Professor Suraj Rampure at the University of Michigan College of Engineering.
+
+1. Kosari S, Walker EJ, Anderson C, Peterson GM, Naunton M, Castillo Martinez E, Garg S, Thomas J. Power outages and refrigerated medicines: The need for better guidelines, awareness and planning. J Clin Pharm Ther. 2018 Oct;43(5):737-739. doi: 10.1111/jcpt.12716. Epub 2018 Jun 13. PMID: 29900564.

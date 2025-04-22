@@ -3,5 +3,5 @@ plugins:
   - jekyll-remote-theme # add this line to the plugins list if you already have one
 
 title : Power Outage Analysis for Life-Saving Medicine
-description: A project to analyze the impact of power outages on life-saving medicine.
+description: A project to analyze the current landscape of power outages in the US in relation to accessing life-saving medicine
 author: Taylor Nguyen and Priya Shah

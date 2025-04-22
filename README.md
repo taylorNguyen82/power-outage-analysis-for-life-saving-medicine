@@ -1,29 +1,68 @@
 ## Introduction 
-We utilize data which pertains to the major outages witnessed by different states in the continental U.S. during January 2000–July 2016. There are a total of 1534 total outages reported in the dataset. Further details regarding the raw data and its collection process can be found in the original published [data article](https://doi.org/10.1016/j.dib.2018.06.067).  
+We utilize data which pertains to the major outages witnessed by different states in the continental U.S. during January 2000–July 2016. There are a total of 1534 total outages reported in the dataset and 57 columns of collected data. Further details regarding the raw data and its collection process can be found in the original published [data article](https://doi.org/10.1016/j.dib.2018.06.067).  
 
-We were initially interested in exploring the question: How are different socioeconomic areas affected by power outages?  (i.e. duration, severity, frequency, # of customers affected, cause, electricity price). However upon an exploration of the data we found that it would be difficult to isolate outages by socioeconomic area, this is because data is aggregated by state, which is too large of a lens through which to observe socioeconomic differences. From this we pivoted to exploring the ‘severity’ of an outage, in terms of its effect on medically vulnerable individuals. We understand that individuals living off of devices such as ventilators or CPAP machines there is limited backup battery. Many individuals rely on refrigerated medcation such as insulin, losing refrigeration power can cause these medicines to lose viability. Some elderly or heat-sensitive populations can face adverse when HVAC systems are out. In each of these scenarios after several hours of power outage individuals may need to be transported to an area with power or a medical center Therefore we aim to explore the question: **How do states with more urban or rural land area correlate with power outage duration?** 
+We were initially interested in exploring the question: How are different socioeconomic areas affected by power outages?  (i.e. duration, severity, frequency, # of customers affected, cause, electricity price). However upon an exploration of the data we found that it would be difficult to isolate outages by socioeconomic area, this is because data is aggregated by state, which is too large of a lens through which to observe socioeconomic differences. From this we pivoted to exploring the ‘severity’ of an outage, in terms of its effect on medically vulnerable individuals. We understand that for individuals living off of devices such as ventilators or CPAP machines there is limited backup battery. Many individuals rely on refrigerated medcation such as insulin and losing refrigeration power can cause these medicines to lose viability. Some elderly or heat-sensitive populations are at increased risk when HVAC systems are out. After several hours of power outage medically vulnerable individuals may need to be transported to an area with power or to a medical center to alieviate these issues. How realistic is this possibility of relocation? Are those at risk of severe power outages also located in rural areas where the nearest medical facility may be a great distance away? Therefore we aim to explore the question: **How do states with more urban or rural land area correlate with severity of power outage duration?** 
 
 ### Table 1. Power Outage Column Descriptions
-<iframe
- src="assets/table1.html"
- frameborder="0"
- width="800"
- height="600"
- ></iframe>
+
+<table>
+    <thead>
+      <tr>
+        <th>Variable Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="2"><strong>OUTAGE EVENTS INFORMATION</strong></td>
+      </tr>
+      <tr>
+        <td>CAUSE.CATEGORY</td>
+        <td>Categories of all the events causing the major power outages</td>
+      </tr>
+      <tr>
+        <td>OUTAGE.DURATION</td>
+        <td>Duration of outage events (in minutes)</td>
+      </tr>
+      <tr>
+        <td>CUSTOMERS.AFFECTED</td>
+        <td>Number of customers affected by the power outage event</td>
+      </tr>
+      <tr>
+        <td colspan="2"><strong>REGIONAL LAND-USE CHARACTERISTICS</strong></td>
+      </tr>
+      <tr>
+        <td>AREAPCT_URBAN</td>
+        <td>Percentage of the land area of the U.S. state represented by the land area of the urban areas (in %)</td>
+      </tr>
+      <tr>
+        <td>AREAPCT_UC</td>
+        <td>Percentage of the land area of the U.S. state represented by the land area of the urban clusters (in %)</td>
+      </tr>
+      <tr>
+        <td colspan="2"><strong>REGIONAL CLIMATE INFORMATION</strong></td>
+      </tr>
+      <tr>
+        <td>CLIMATE.REGION</td>
+        <td>U.S. Climate regions as specified by National Centers for Environmental Information (nine climatically consistent regions in continental U.S.A.)</td>
+      </tr>
+    </tbody>
+  </table>
 *Note: “NA” in the data file indicates that data was not available.*
 
 ## Data Cleaning and Exploratory Data Analysis
-After extracting it from the downloaded excel, we store and manipulate the data within a Pandas dataframe. From the master dataframe we construct a new dataframe where we select our relevant columns and remove rows with null values. Data conversions are made to ensure numerical data can be used appropriately in subsequent steps.  
+After extracting it from the downloaded excel, we store and manipulate the data within a Pandas dataframe. From the master DataFrame we construct a new dataframe where we select our relevant columns and remove rows with null values. Data conversions are made to ensure numerical data can be used appropriately in subsequent steps. After cleaning our resulting DataFrame has 1042 outages for us to work with. We have created our own column `AREAPCT_RURAL` which is assumed to make up the remaining percantage of land area within the state.
 
-| semester    | Count |
-|-------------|-------|
-| Fall 2020   | 3     |
-| Winter 2021 | 2     |
-| Spring 2021 | 6     |
-| Summer 2021 | 4     |
-| Fall 2021   |  |
+| POSTAL.CODE   |   OUTAGE.DURATION |   AREAPCT_URBAN |   AREAPCT_UC | CAUSE.CATEGORY   |   CUSTOMERS.AFFECTED | CLIMATE.REGION     |   AREAPCT_RURAL |
+|:--------------|------------------:|----------------:|-------------:|:-----------------|---------------------:|:-------------------|----------------:|
+| MN            |              3060 |            2.14 |          0.6 | severe weather   |                70000 | East North Central |           97.26 |
+| MN            |              3000 |            2.14 |          0.6 | severe weather   |                70000 | East North Central |           97.26 |
+| MN            |              2550 |            2.14 |          0.6 | severe weather   |                68200 | East North Central |           97.26 |
+| MN            |              1740 |            2.14 |          0.6 | severe weather   |               250000 | East North Central |           97.26 |
+| MN            |              1860 |            2.14 |          0.6 | severe weather   |                60000 | East North Central |           97.26 |
 
-We begin by investigating the `OUTAGE.DURATION` column 
+### Univariate Analysis 
+We begin by investigating the distribution of the `OUTAGE.DURATION` column. 
 
  <iframe
  src="assets/outage_dur_distr.html"
@@ -32,7 +71,7 @@ We begin by investigating the `OUTAGE.DURATION` column
  height="400"
  ></iframe>
 
-This isn't a great depiction... the scale of the x-axis isn't very telling. Let's try to frame this on a more comprehensible scale. We create a new categorical variable, `OUTAGE.DURATION.DESCRIPTION` which places the values of `OUTAGE.DURATION` in the following bins aka our severity categories:
+This depiction isn't very helpful. The data is clearly right-skewed but the scale of the x-axis bins are so large its difficult to derive real meaning for our exploration of medical vulnerability. Let's try to frame this on a more relevant scale. We have created a new categorical variable, `OUTAGE.DURATION.DESCRIPTION` which places the values of `OUTAGE.DURATION` in the following bins, these are our severity categories:
 
 **Short-term (0–2 hours):** Minimal risk for most
 
@@ -50,8 +89,10 @@ This isn't a great depiction... the scale of the x-axis isn't very telling. Let'
  height="400"
  ></iframe>
 
+Over half of our data is categorized as having a medically severe duration, this demonstrates a dangerous trend for those with higher medical risk. To learn more about these vulnerabilities we need to understand the geographic landscape in which these severe outages ocurr. 
+
 ### Bivariate Analysis 
-Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the other columns. We began with the `AREAPCT_...` columns because our research question focuses on the relation of these columns to outage duration. 
+Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the `AREAPCT_...` columns. Recall from our descriptions in Table 1 above that `AREAPCT_...` is the percentage of land area within each state that is classified as being `Urban`, `Urban Cluster`, or `Rural`.  
 
 
  <iframe
@@ -60,15 +101,6 @@ Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the other columns. 
  width="800"
  height="400"
  ></iframe>
- 
- <iframe
- src="assets/outage_outage_uc.html"
- frameborder="0"
- width="800"
- height="400"
- ></iframe>
-
-Note that the above columns explored were `AREAPCT_URBAN` and `AREAPCT_UC`, these are both percentages of land area within a state. We have created our own column `AREAPCT_RURAL` which is assumed to make up the remaining percantage of land area within the state.
 
 <iframe
  src="assets/outage_outage_rural.html"
@@ -76,6 +108,11 @@ Note that the above columns explored were `AREAPCT_URBAN` and `AREAPCT_UC`, thes
  width="800"
  height="400"
  ></iframe>
+
+### Aggregates
+
+#### Imputation 
+We did not perform any missing value imputation. 
 
 ## Framing a Prediction Problem
 We seek to make a multiclass classification prediction problem. We are predicting on the column we have created earlier: `OUTAGE.DURATION.DESCRIPTION`. 

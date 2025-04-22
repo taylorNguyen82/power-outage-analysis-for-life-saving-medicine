@@ -118,7 +118,7 @@ Now we explore the `OUTAGE.DURATION.DESCRIPTION` relative to the `AREAPCT_...` c
  <iframe
  src="assets/biv_postal.html"
  frameborder="0"
- width="800"
+ width="1200"
  height="400"
  ></iframe>
 
